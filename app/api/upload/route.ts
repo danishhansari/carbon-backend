@@ -1,10 +1,14 @@
 import { v4 as uuidv4 } from "uuid";
 import type { NextRequest } from "next/server";
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { S3Client } from "@aws-sdk/client-s3";
+import { config } from "dotenv";
+import { db } from "@/app/lib/db/db";
+import { products } from "@/app/lib/db/schema";
 
-export const runtime = "edge";
+config();
+// export const runtime = "edge";
 
 const ACCOUNT_ID = process.env.ACCOUNT_ID as string;
 const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID as string;
@@ -51,3 +55,4 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: error.message });
   }
 }
+
