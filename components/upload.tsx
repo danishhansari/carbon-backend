@@ -1,24 +1,26 @@
 "use client";
 
-import type React from "react";
-
-import {
+import React, {
   type ChangeEvent,
   type FormEvent,
   useState,
   useRef,
-  useEffect,
 } from "react";
 import {
   UploadCloud,
-  Image,
+  ImageIcon,
   Loader2,
   X,
   CheckCircle,
   AlertCircle,
+  Tag,
+  FileText,
+  DollarSign,
+  Layers,
 } from "lucide-react";
 
 export function Upload() {
+  // File upload state
   const [file, setFile] = useState<File | undefined>();
   const [uploading, setUploading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
@@ -28,27 +30,14 @@ export function Upload() {
   const [preview, setPreview] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
-  // Check for dark mode preference
-  useEffect(() => {
-    const isDark =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDarkMode(isDark);
-
-    // Listen for changes in color scheme preference
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (e: MediaQueryListEvent) => setIsDarkMode(e.matches);
-    mediaQuery.addEventListener("change", handleChange);
-
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle("dark");
-  };
+  // Product information state
+  const [productName, setProductName] = useState<string>("");
+  const [productDescription, setProductDescription] = useState<string>("");
+  const [productPrice, setProductPrice] = useState<string>("");
+  const [productCategory, setProductCategory] = useState<string>("");
+  const [productQuantity, setProductQuantity] = useState<string>("1");
+  const [activeTab, setActiveTab] = useState<string>("details");
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -126,14 +115,46 @@ export function Upload() {
 
   const handleUpload = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!file) {
-      setMessage("Please select a file");
+
+    // Validate product information
+    if (!productName.trim()) {
+      setMessage("Please enter a product name");
       setMessageType("error");
+      setActiveTab("details");
+      return;
+    }
+
+    if (!productDescription.trim()) {
+      setMessage("Please enter a product description");
+      setMessageType("error");
+      setActiveTab("details");
+      return;
+    }
+
+    if (!productPrice.trim() || isNaN(Number(productPrice))) {
+      setMessage("Please enter a valid product price");
+      setMessageType("error");
+      setActiveTab("details");
+      return;
+    }
+
+    if (!productCategory) {
+      setMessage("Please select a product category");
+      setMessageType("error");
+      setActiveTab("details");
+      return;
+    }
+
+    // Validate file
+    if (!file) {
+      setMessage("Please select a product image");
+      setMessageType("error");
+      setActiveTab("image");
       return;
     }
 
     setUploading(true);
-    setMessage("Uploading your image...");
+    setMessage("Uploading your product...");
     setMessageType("info");
 
     try {
@@ -143,7 +164,13 @@ export function Upload() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ filename: file.name }),
+        body: JSON.stringify({
+          filename: file.name,
+          productName,
+          description: productDescription,
+          range: Number.parseFloat(productPrice),
+          index: Math.floor(Math.random() * 100),
+        }),
       });
 
       if (res.ok) {
@@ -154,10 +181,22 @@ export function Upload() {
         });
 
         if (uploadRes.ok) {
-          setMessage("Image uploaded successfully!");
+          setMessage("Product uploaded successfully!");
           setMessageType("success");
+
+          // Reset form after successful upload
+          setProductName("");
+          setProductDescription("");
+          setProductPrice("");
+          setProductCategory("");
+          setProductQuantity("1");
+          setFile(undefined);
+          setPreview(null);
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
         } else {
-          setMessage("Image upload failed");
+          setMessage("Product image upload failed");
           setMessageType("error");
         }
       } else {
@@ -188,136 +227,268 @@ export function Upload() {
     }
   };
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
+
   return (
-    <div className={isDarkMode ? "dark" : ""}>
+    <div className="dark">
       <main className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4 transition-colors duration-300">
-        <div className="w-full max-w-3xl">
+        <div className="w-full max-w-4xl">
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden transition-all duration-300 border border-slate-200 dark:border-slate-700">
             <div className="relative">
               <div className="p-8 md:p-10">
                 <div className="flex items-center mb-8">
-                  <div className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-4">
-                    <Image className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+                  <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-4">
+                    <Tag className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                   </div>
                   <div>
                     <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-                      Image Uploader
+                      Product Upload
                     </h1>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                      Upload your images securely with pre-signed URLs
+                      Add a new product to your inventory with images and
+                      details
                     </p>
                   </div>
                 </div>
 
                 <form onSubmit={handleUpload} className="space-y-8">
-                  <div
-                    className={`relative border-2 border-dashed rounded-xl transition-all duration-300 ease-in-out overflow-hidden
-                      ${
-                        dragActive
-                          ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20"
-                          : "border-slate-300 dark:border-slate-600 hover:border-indigo-400 dark:hover:border-indigo-500"
-                      }
-                      ${preview ? "h-auto" : "h-72"}
-                    `}
-                    onDragEnter={handleDrag}
-                    onDragLeave={handleDrag}
-                    onDragOver={handleDrag}
-                    onDrop={handleDrop}
-                    onClick={triggerFileInput}
-                  >
-                    <input
-                      ref={fileInputRef}
-                      accept="image/*"
-                      className="hidden"
-                      id="image-upload"
-                      type="file"
-                      onChange={handleFileChange}
-                    />
-
-                    {preview ? (
-                      <div className="relative group">
-                        <img
-                          src={preview || "/placeholder.svg"}
-                          alt="Preview"
-                          className="w-full h-auto object-contain max-h-[400px]"
-                        />
-                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center transition-all duration-300 rounded-lg">
-                          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center">
-                            <button
-                              type="button"
-                              onClick={removeImage}
-                              className="p-2 bg-red-500 text-white rounded-full mb-2 hover:bg-red-600 transition-colors"
-                              aria-label="Remove image"
-                            >
-                              <X className="h-5 w-5" />
-                            </button>
-                            <p className="text-white text-sm font-medium px-4 py-2 bg-black bg-opacity-50 rounded-lg">
-                              Click to change image
-                            </p>
-                          </div>
-                        </div>
-
-                        {file && (
-                          <div className="absolute bottom-3 left-3 bg-black bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
-                            {file.name.length > 25
-                              ? file.name.substring(0, 22) + "..."
-                              : file.name}{" "}
-                            • {(file.size / (1024 * 1024)).toFixed(2)}MB
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                        <div className="w-20 h-20 mb-6 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                          <UploadCloud className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
-                        </div>
-                        <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-2">
-                          Drag and drop your image
-                        </h3>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 max-w-xs">
-                          Supports JPG, PNG and GIF files. Max file size 5MB.
-                        </p>
-                        <button
-                          type="button"
-                          className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors"
-                        >
-                          Browse Files
-                        </button>
-                      </div>
-                    )}
+                  {/* Tabs */}
+                  <div className="grid grid-cols-2 mb-8">
+                    <button
+                      type="button"
+                      onClick={() => handleTabChange("details")}
+                      className={`flex items-center justify-center py-3 text-sm font-medium border-b-2 transition-colors ${
+                        activeTab === "details"
+                          ? "border-purple-600 text-purple-600 dark:text-purple-400 dark:border-purple-400"
+                          : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
+                      }`}
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      Product Details
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleTabChange("image")}
+                      className={`flex items-center justify-center py-3 text-sm font-medium border-b-2 transition-colors ${
+                        activeTab === "image"
+                          ? "border-purple-600 text-purple-600 dark:text-purple-400 dark:border-purple-400"
+                          : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
+                      }`}
+                    >
+                      <ImageIcon className="w-4 h-4 mr-2" />
+                      Product Image
+                    </button>
                   </div>
 
-                  <div className="space-y-4">
-                    <div className="flex items-center">
-                      <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
-                      <span className="px-4 text-sm text-slate-500 dark:text-slate-400">
-                        Upload Options
-                      </span>
-                      <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
-                    </div>
+                  {/* Product Details Tab */}
+                  <div className={activeTab === "details" ? "block" : "hidden"}>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="product-name"
+                          className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                        >
+                          Product Name
+                        </label>
+                        <input
+                          id="product-name"
+                          placeholder="Enter product name"
+                          value={productName}
+                          onChange={(e) => setProductName(e.target.value)}
+                          className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-slate-700 dark:text-white text-sm transition-colors"
+                        />
+                      </div>
 
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="product-price"
+                          className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                        >
+                          Price ($)
+                        </label>
+                        <div className="relative">
+                          <DollarSign className="absolute left-3 top-2.5 h-5 w-5 text-slate-400" />
+                          <input
+                            id="product-price"
+                            placeholder="0.00"
+                            value={productPrice}
+                            onChange={(e) => setProductPrice(e.target.value)}
+                            className="w-full pl-10 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-slate-700 dark:text-white text-sm transition-colors"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-2 mt-4">
+                      <label
+                        htmlFor="product-description"
+                        className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                      >
+                        Product Description
+                      </label>
+                      <textarea
+                        id="product-description"
+                        placeholder="Enter product description"
+                        rows={4}
+                        value={productDescription}
+                        onChange={(e) => setProductDescription(e.target.value)}
+                        className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-slate-700 dark:text-white text-sm transition-colors"
+                      />
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-2 mt-4">
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="product-category"
+                          className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                        >
+                          Category
+                        </label>
+                        <select
+                          id="product-category"
+                          value={productCategory}
+                          onChange={(e) => setProductCategory(e.target.value)}
+                          className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-slate-700 dark:text-white text-sm transition-colors"
+                        >
+                          <option value="">Select category</option>
+                          <option value="electronics">Electronics</option>
+                          <option value="clothing">Clothing</option>
+                          <option value="home">Home & Kitchen</option>
+                          <option value="books">Books</option>
+                          <option value="toys">Toys & Games</option>
+                          <option value="beauty">Beauty & Personal Care</option>
+                          <option value="sports">Sports & Outdoors</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="product-quantity"
+                          className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                        >
+                          Initial Stock Quantity
+                        </label>
+                        <div className="relative">
+                          <Layers className="absolute left-3 top-2.5 h-5 w-5 text-slate-400" />
+                          <select
+                            id="product-quantity"
+                            value={productQuantity}
+                            onChange={(e) => setProductQuantity(e.target.value)}
+                            className="w-full pl-10 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-slate-700 dark:text-white text-sm transition-colors"
+                          >
+                            {[1, 5, 10, 25, 50, 100, 250, 500].map((qty) => (
+                              <option key={qty} value={qty.toString()}>
+                                {qty}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Product Image Tab */}
+                  <div className={activeTab === "image" ? "block" : "hidden"}>
+                    <div
+                      className={`relative border-2 border-dashed rounded-xl transition-all duration-300 ease-in-out overflow-hidden cursor-pointer
+                        ${
+                          dragActive
+                            ? "border-purple-500 bg-purple-50 dark:bg-purple-900/20"
+                            : "border-slate-300 dark:border-slate-600 hover:border-purple-400 dark:hover:border-purple-500"
+                        }
+                        ${preview ? "h-auto" : "h-72"}
+                      `}
+                      onDragEnter={handleDrag}
+                      onDragLeave={handleDrag}
+                      onDragOver={handleDrag}
+                      onDrop={handleDrop}
+                      onClick={triggerFileInput}
+                    >
+                      <input
+                        ref={fileInputRef}
+                        accept="image/*"
+                        className="hidden"
+                        id="image-upload"
+                        type="file"
+                        onChange={handleFileChange}
+                      />
+
+                      {preview ? (
+                        <div className="relative group">
+                          <img
+                            src={preview}
+                            alt="Product preview"
+                            className="w-full h-auto object-contain max-h-96"
+                          />
+                          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center transition-all duration-300 rounded-lg">
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center">
+                              <button
+                                type="button"
+                                onClick={removeImage}
+                                className="p-2 bg-red-500 text-white rounded-full mb-2 hover:bg-red-600 transition-colors"
+                                aria-label="Remove image"
+                              >
+                                <X className="h-5 w-5" />
+                              </button>
+                              <p className="text-white text-sm font-medium px-4 py-2 bg-black bg-opacity-50 rounded-lg">
+                                Click to change image
+                              </p>
+                            </div>
+                          </div>
+
+                          {file && (
+                            <div className="absolute bottom-3 left-3 bg-black bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
+                              {file.name.length > 25
+                                ? file.name.substring(0, 22) + "..."
+                                : file.name}{" "}
+                              • {(file.size / (1024 * 1024)).toFixed(2)}MB
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                          <div className="w-20 h-20 mb-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                            <UploadCloud className="h-10 w-10 text-purple-600 dark:text-purple-400" />
+                          </div>
+                          <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-2">
+                            Drag and drop your product image
+                          </h3>
+                          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 max-w-xs">
+                            Supports JPG, PNG and GIF files. Max file size 5MB.
+                          </p>
+                          <button
+                            type="button"
+                            className="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors"
+                          >
+                            Browse Files
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-700">
                     <button
                       type="submit"
-                      disabled={uploading || !file}
+                      disabled={uploading}
                       className={`w-full flex items-center justify-center px-6 py-3.5 rounded-xl text-white font-medium transition-all duration-300
                         ${
-                          !file
-                            ? "bg-slate-400 cursor-not-allowed opacity-70"
-                            : uploading
-                            ? "bg-indigo-600 cursor-wait"
-                            : "bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 shadow-md hover:shadow-lg"
+                          uploading
+                            ? "bg-purple-600 cursor-wait"
+                            : "bg-purple-600 hover:bg-purple-700 active:bg-purple-800 shadow-md hover:shadow-lg"
                         }
                       `}
                     >
                       {uploading ? (
                         <>
                           <Loader2 className="w-5 h-5 mr-3 animate-spin" />
-                          Uploading...
+                          Uploading Product...
                         </>
                       ) : (
                         <>
-                          <UploadCloud className="w-5 h-5 mr-3" />
-                          Upload with Pre-signed URL
+                          <Tag className="w-5 h-5 mr-3" />
+                          Add Product to Inventory
                         </>
                       )}
                     </button>
@@ -347,8 +518,9 @@ export function Upload() {
 
                 <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
                   <p className="text-xs text-slate-500 dark:text-slate-400 text-center">
-                    Your files are securely uploaded and processed. We support
-                    various image formats.
+                    Your product information and images are securely uploaded
+                    and processed. All product details will be available in your
+                    inventory management system.
                   </p>
                 </div>
               </div>

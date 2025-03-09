@@ -8,7 +8,6 @@ import { db } from "@/app/lib/db/db";
 import { products } from "@/app/lib/db/schema";
 
 config();
-// export const runtime = "edge";
 
 const ACCOUNT_ID = process.env.ACCOUNT_ID as string;
 const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID as string;
@@ -25,7 +24,8 @@ const S3 = new S3Client({
 
 // Get Pre-Signed URL for Upload
 export async function POST(request: NextRequest) {
-  const { filename } = await request.json();
+  const obj = await request.json();
+  const { filename, productName, description, range, index } = obj;
   const fileExtension = filename.split(".").pop(); // Get file extension
   const uniqueFilename = `${uuidv4()}.${fileExtension}`; // Replace with UUID and retain extension
 
@@ -46,7 +46,18 @@ export async function POST(request: NextRequest) {
     const publicPath = `https://pub-eb15d66d126740589c61b97ec9d026af.r2.dev/${uniqueFilename}`;
     console.log(publicPath);
     if (url != null) {
-      return Response.json({ publicPath, url });
+      try {
+        const response = await db.insert(products).values({
+          productName,
+          description,
+          range,
+          index,
+          imgUrl: publicPath,
+        });
+        return Response.json({ publicPath, url, response });
+      } catch (error) {
+        return Response.json(error);
+      }
     }
     return Response.json({
       error: "Error while uploading file please try again later",
@@ -56,3 +67,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export async function GET(request: NextRequest) {
+  const response = await db.select().from(products);
+  return Response.json(response);
+}
