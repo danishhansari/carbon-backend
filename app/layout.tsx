@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Provider } from "./provider/provider";
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import Navbar from "@/components/navbar";
+import HeroSection from "@/components/hero";
+import FeaturedProducts from "@/components/feature-product";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +32,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Provider>
+          <Navbar />
+          <HeroSection />
+          <FeaturedProducts />
+          {children}
+        </Provider>
       </body>
     </html>
   );
