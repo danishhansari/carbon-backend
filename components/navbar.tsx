@@ -37,9 +37,10 @@ export default function Navbar() {
         } fixed top-0 left-0 lg:px-12 w-full z-50 transition-all duration-300`}
         style={{ top: scrolled ? "0" : "32px" }}
       >
-        <div className="container mx-auto flex justify-between items-center px-4">
+        <div className="container mx-auto flex justify-between items-center px-4  ">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center ">
+          {/* <logo width={150} height={50} /> */}
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -49,7 +50,7 @@ export default function Navbar() {
               <span className="text-red-600">Royal</span>
               <span className="text-gray-800 hidden sm:inline">
                 {" "}
-                Manufacturing
+                Carbon Brush
               </span>
             </motion.div>
           </div>
@@ -106,25 +107,25 @@ export default function Navbar() {
                       href="#"
                       className="block px-4 py-2.5 hover:bg-red-50 hover:text-red-600 cursor-pointer transition-colors duration-150 text-gray-700"
                     >
-                      Industrial Machinery
+                      Autostop Carbon Brush
                     </a>
                     <a
                       href="#"
                       className="block px-4 py-2.5 hover:bg-red-50 hover:text-red-600 cursor-pointer transition-colors duration-150 text-gray-700"
                     >
-                      Manufacturing Tools
+                      Dc Motors Carbon Brush
                     </a>
                     <a
                       href="#"
                       className="block px-4 py-2.5 hover:bg-red-50 hover:text-red-600 cursor-pointer transition-colors duration-150 text-gray-700"
                     >
-                      Automation Systems
+                     Ac Motors Carbon Brush
                     </a>
                     <a
                       href="#"
                       className="block px-4 py-2.5 hover:bg-red-50 hover:text-red-600 cursor-pointer transition-colors duration-150 text-gray-700"
                     >
-                      Spare Parts
+                      
                     </a>
                   </div>
                 </div>
