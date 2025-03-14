@@ -114,12 +114,12 @@ export default function HeroSection() {
   const imageControls = useAnimation();
 
   // Auto-advance slides
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev === products.length - 1 ? 0 : prev + 1));
-    }, 7000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentSlide((prev) => (prev === products.length - 1 ? 0 : prev + 1));
+  //   }, 7000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   // Animation controls
   useEffect(() => {
