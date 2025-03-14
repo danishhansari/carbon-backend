@@ -266,13 +266,13 @@ export default function HeroSection() {
                 className="flex flex-wrap gap-4"
               >
                 <button
-                  className="px-6 py-3 text-white font-medium rounded-md flex items-center gap-2 hover:shadow-lg transition-all duration-300"
+                  className="p-2 lg:px-6 lg:py-3 text-white lg:font-medium rounded-md flex items-center gap-2 hover:shadow-lg transition-all duration-300"
                   style={{ backgroundColor: products[currentSlide].color }}
                 >
                   {products[currentSlide].ctaText}
                   <ArrowRight size={16} />
                 </button>
-                <button className="px-6 py-3 bg-white text-neutral-800 font-medium rounded-md border border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50 transition-colors duration-300">
+                <button className="p-2 lg:px-6 lg:py-3 bg-white text-neutral-800 font-medium rounded-md border border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50 transition-colors duration-300">
                   {products[currentSlide].ctaSecondary}
                 </button>
               </motion.div>

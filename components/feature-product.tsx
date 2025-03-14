@@ -12,7 +12,7 @@ const products = [
       "https://plus.unsplash.com/premium_photo-1663012869057-6833154b6fe4?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     description:
       "High-precision drill press for industrial applications with variable speed control.",
-    price: "$2,499",
+    price: "",
   },
   {
     id: 2,
@@ -22,7 +22,7 @@ const products = [
       "https://plus.unsplash.com/premium_photo-1663045362736-9635edb042f4?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     description:
       "Modular conveyor system with smart controls for efficient material handling.",
-    price: "$5,999",
+    price: "",
   },
   {
     id: 3,
@@ -32,7 +32,7 @@ const products = [
       "https://plus.unsplash.com/premium_photo-1682141597582-41bcb432820e?q=80&w=2121&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     description:
       "Computer numerical control milling machine for precision manufacturing.",
-    price: "$12,499",
+    price: "",
   },
   {
     id: 4,
@@ -42,7 +42,7 @@ const products = [
       "https://plus.unsplash.com/premium_photo-1663013310298-80cfe3d51d78?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDU1fHx8ZW58MHx8fHx8",
     description:
       "6-axis robotic arm for assembly line automation with advanced programming capabilities.",
-    price: "$8,750",
+    price: "",
   },
 ];
 
@@ -132,7 +132,7 @@ export default function FeaturedProducts() {
                   <span className="text-red-600 font-bold">
                     {product.price}
                   </span>
-                  <button className="px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-red-600 hover:text-white transition-colors duration-300">
+                  <button className="p-2 lg:px-4 lg:py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-red-600 hover:text-white transition-colors duration-300">
                     View Details
                   </button>
                 </div>
@@ -148,7 +148,7 @@ export default function FeaturedProducts() {
           viewport={{ once: true, amount: 0.2 }}
           className="text-center mt-12"
         >
-          <button className="px-6 py-3 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 transition-colors duration-300">
+          <button className="p-2 lg:px-6 lg:py-3 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 transition-colors duration-300">
             View All Products
           </button>
         </motion.div>

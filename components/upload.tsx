@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  type ChangeEvent,
-  type FormEvent,
-  useState,
-  useRef,
-  useCallback,
-} from "react";
+import React, { type FormEvent, useState, useRef, useCallback } from "react";
 import {
   UploadCloud,
   ImageIcon,

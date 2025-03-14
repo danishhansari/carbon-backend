@@ -1,17 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Search,
-  ShoppingCart,
-  Heart,
-  User,
-  Menu,
-  X,
-  ChevronDown,
-  Phone,
-  Mail,
-} from "lucide-react";
+import { Search, Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
