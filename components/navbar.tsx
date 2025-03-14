@@ -35,33 +35,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top bar */}
-      {/* <div className="hidden md:block bg-red-700 text-white py-2">
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <div className="flex items-center gap-6 text-sm">
-            <div className="flex items-center gap-2">
-              <Phone size={14} />
-              <span>+1 (800) 123-4567</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Mail size={14} />
-              <span>contact@royalmanufacturing.com</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-4 text-sm">
-            <a href="#" className="hover:underline">
-              Support
-            </a>
-            <a href="#" className="hover:underline">
-              Careers
-            </a>
-            <a href="#" className="hover:underline">
-              About Us
-            </a>
-          </div>
-        </div>
-      </div> */}
-
       {/* Main navbar */}
       <motion.nav
         initial={{ y: -10, opacity: 0 }}
@@ -71,7 +44,7 @@ export default function Navbar() {
           scrolled
             ? "bg-white/95 backdrop-blur-md shadow-md py-2"
             : "bg-white py-3"
-        } fixed top-0 left-0 w-full z-50 transition-all duration-300`}
+        } fixed top-0 left-0 lg:px-12 w-full z-50 transition-all duration-300`}
         style={{ top: scrolled ? "0" : "32px" }}
       >
         <div className="container mx-auto flex justify-between items-center px-4">
@@ -85,6 +58,7 @@ export default function Navbar() {
             >
               <span className="text-red-600">Royal</span>
               <span className="text-gray-800 hidden sm:inline">
+                {" "}
                 Manufacturing
               </span>
             </motion.div>
@@ -180,34 +154,6 @@ export default function Navbar() {
                 Contact
               </a>
             </div>
-
-            {/* User Actions */}
-            <div className="flex items-center gap-5 border-l border-gray-200 pl-5">
-              <div className="relative group">
-                <Heart
-                  size={22}
-                  className="text-gray-700 cursor-pointer group-hover:text-red-600 transition-colors duration-200"
-                />
-                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  0
-                </span>
-              </div>
-              <div className="relative group">
-                <ShoppingCart
-                  size={22}
-                  className="text-gray-700 cursor-pointer group-hover:text-red-600 transition-colors duration-200"
-                />
-                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  0
-                </span>
-              </div>
-              <div className="group">
-                <User
-                  size={22}
-                  className="text-gray-700 cursor-pointer group-hover:text-red-600 transition-colors duration-200"
-                />
-              </div>
-            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -290,30 +236,6 @@ export default function Navbar() {
                     className="block px-6 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors duration-150"
                   >
                     Contact
-                  </a>
-                </li>
-                <li className="border-b border-gray-100">
-                  <a href="#" className="block px-6 py-3">
-                    <div className="flex items-center gap-3 text-gray-700 hover:text-red-600">
-                      <Heart size={18} />
-                      <span>Wishlist</span>
-                    </div>
-                  </a>
-                </li>
-                <li className="border-b border-gray-100">
-                  <a href="#" className="block px-6 py-3">
-                    <div className="flex items-center gap-3 text-gray-700 hover:text-red-600">
-                      <ShoppingCart size={18} />
-                      <span>Cart</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="block px-6 py-3">
-                    <div className="flex items-center gap-3 text-gray-700 hover:text-red-600">
-                      <User size={18} />
-                      <span>Account</span>
-                    </div>
                   </a>
                 </li>
               </ul>

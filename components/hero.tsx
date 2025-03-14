@@ -1,8 +1,13 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence, useAnimation, useInView } from "framer-motion"
-import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react"
+import { useState, useEffect, useRef } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useAnimation,
+  useInView,
+} from "framer-motion";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 
 // Define a more sophisticated color palette
 const colors = {
@@ -42,7 +47,7 @@ const colors = {
     800: "#1F2937",
     900: "#111827",
   },
-}
+};
 
 const products = [
   {
@@ -51,8 +56,14 @@ const products = [
     subtitle: "Next-Gen Manufacturing",
     description:
       "Revolutionize your production line with our state-of-the-art automation system. Increase efficiency by up to 35% while reducing operational costs.",
-    image: "/placeholder.svg?height=800&width=800",
-    features: ["AI-powered controls", "Modular design", "Real-time analytics", "Energy efficient"],
+    image:
+      "https://images.unsplash.com/photo-1528918029941-0e3a62e408e3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    features: [
+      "AI-powered controls",
+      "Modular design",
+      "Real-time analytics",
+      "Energy efficient",
+    ],
     ctaText: "Explore System",
     ctaSecondary: "Watch Demo",
     color: colors.primary[600],
@@ -63,8 +74,14 @@ const products = [
     subtitle: "Ultimate Precision",
     description:
       "Achieve micron-level precision with our advanced CNC machinery. Perfect for aerospace, medical, and high-tolerance manufacturing applications.",
-    image: "/placeholder.svg?height=800&width=800",
-    features: ["0.001mm precision", "Multi-axis control", "Rapid tooling", "Automated calibration"],
+    image:
+      "https://images.unsplash.com/photo-1530939069691-adb779735408?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDUxfHx8ZW58MHx8fHx8",
+    features: [
+      "0.001mm precision",
+      "Multi-axis control",
+      "Rapid tooling",
+      "Automated calibration",
+    ],
     ctaText: "View Specifications",
     ctaSecondary: "Request Quote",
     color: colors.primary[700],
@@ -75,44 +92,50 @@ const products = [
     subtitle: "Industry 4.0 Ready",
     description:
       "Transform your facility into a smart factory with our integrated IoT platform. Monitor, control, and optimize your entire operation from anywhere.",
-    image: "/placeholder.svg?height=800&width=800",
-    features: ["IoT integration", "Cloud dashboard", "Predictive maintenance", "Remote management"],
+    image:
+      "https://images.unsplash.com/photo-1564183063457-680b3759a5bd?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDYxfHx8ZW58MHx8fHx8",
+    features: [
+      "IoT integration",
+      "Cloud dashboard",
+      "Predictive maintenance",
+      "Remote management",
+    ],
     ctaText: "Discover Platform",
     ctaSecondary: "Schedule Demo",
     color: colors.primary[800],
   },
-]
+];
 
 export default function HeroSection() {
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const heroRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(heroRef, { once: false, amount: 0.1 })
-  const controls = useAnimation()
-  const imageControls = useAnimation()
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(heroRef, { once: false, amount: 0.1 });
+  const controls = useAnimation();
+  const imageControls = useAnimation();
 
   // Auto-advance slides
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev === products.length - 1 ? 0 : prev + 1))
-    }, 7000)
-    return () => clearInterval(interval)
-  }, [])
+      setCurrentSlide((prev) => (prev === products.length - 1 ? 0 : prev + 1));
+    }, 7000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Animation controls
   useEffect(() => {
     if (isInView) {
-      controls.start("visible")
-      imageControls.start("visible")
+      controls.start("visible");
+      imageControls.start("visible");
     }
-  }, [isInView, controls, imageControls])
+  }, [isInView, controls, imageControls]);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev === products.length - 1 ? 0 : prev + 1))
-  }
+    setCurrentSlide((prev) => (prev === products.length - 1 ? 0 : prev + 1));
+  };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? products.length - 1 : prev - 1))
-  }
+    setCurrentSlide((prev) => (prev === 0 ? products.length - 1 : prev - 1));
+  };
 
   // Animation variants
   const textVariants = {
@@ -125,7 +148,7 @@ export default function HeroSection() {
         ease: [0.22, 1, 0.36, 1],
       },
     },
-  }
+  };
 
   const imageVariants = {
     hidden: { opacity: 0, scale: 0.9, x: 50 },
@@ -138,7 +161,7 @@ export default function HeroSection() {
         ease: [0.22, 1, 0.36, 1],
       },
     },
-  }
+  };
 
   const featureVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -150,13 +173,19 @@ export default function HeroSection() {
         delay: 0.2 + custom * 0.1,
       },
     }),
-  }
+  };
 
   return (
-    <div ref={heroRef} className="min-h-screen w-full overflow-hidden bg-white pt-20 md:pt-24">
+    <div
+      ref={heroRef}
+      className="h- max-w-6xl mx-auto w-full overflow-hidden bg-white pt-20 md:pt-24"
+    >
       <div className="container mx-auto px-4 py-8 md:py-12">
         <AnimatePresence mode="wait">
-          <div key={currentSlide} className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div
+            key={currentSlide}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center"
+          >
             {/* Left side - Product details */}
             <motion.div
               initial="hidden"
@@ -185,7 +214,7 @@ export default function HeroSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-neutral-900"
+                className="text-xl md:text-2xl lg:text-4xl font-bold mb-6 leading-tight text-neutral-900"
               >
                 {products[currentSlide].title}
               </motion.h1>
@@ -194,7 +223,7 @@ export default function HeroSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-lg text-neutral-600 mb-8 max-w-xl"
+                className="text-md text-neutral-600 mb-8 max-w-xl"
               >
                 {products[currentSlide].description}
               </motion.p>
@@ -205,7 +234,9 @@ export default function HeroSection() {
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="mb-8"
               >
-                <h3 className="text-sm font-semibold text-neutral-500 mb-4">KEY FEATURES</h3>
+                <h3 className="text-sm font-semibold text-neutral-500 mb-4">
+                  KEY FEATURES
+                </h3>
                 <div className="grid grid-cols-2 gap-3">
                   {products[currentSlide].features.map((feature, index) => (
                     <motion.div
@@ -218,7 +249,9 @@ export default function HeroSection() {
                     >
                       <div
                         className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: products[currentSlide].color }}
+                        style={{
+                          backgroundColor: products[currentSlide].color,
+                        }}
                       ></div>
                       <span className="text-neutral-700">{feature}</span>
                     </motion.div>
@@ -261,9 +294,13 @@ export default function HeroSection() {
                     <div className="relative h-1 w-10 bg-neutral-200 rounded-full overflow-hidden">
                       <div
                         className={`absolute inset-0 transition-all duration-300 rounded-full ${
-                          currentSlide === index ? "w-full" : "w-0 group-hover:w-1/3"
+                          currentSlide === index
+                            ? "w-full"
+                            : "w-0 group-hover:w-1/3"
                         }`}
-                        style={{ backgroundColor: products[currentSlide].color }}
+                        style={{
+                          backgroundColor: products[currentSlide].color,
+                        }}
                       ></div>
                     </div>
                   </button>
@@ -303,14 +340,18 @@ export default function HeroSection() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.3 }}
                   className="absolute -bottom-6 -right-6 w-32 h-32 rounded-full z-0"
-                  style={{ backgroundColor: `${products[currentSlide].color}20` }}
+                  style={{
+                    backgroundColor: `${products[currentSlide].color}20`,
+                  }}
                 ></motion.div>
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
                   className="absolute -top-4 -left-4 w-20 h-20 rounded-full z-0"
-                  style={{ backgroundColor: `${products[currentSlide].color}15` }}
+                  style={{
+                    backgroundColor: `${products[currentSlide].color}15`,
+                  }}
                 ></motion.div>
               </div>
 
@@ -337,6 +378,5 @@ export default function HeroSection() {
         </AnimatePresence>
       </div>
     </div>
-  )
+  );
 }
-
