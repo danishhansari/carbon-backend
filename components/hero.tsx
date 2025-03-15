@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import carbon1 from "@/app/assets/carbon1.png"; 
+import carbon3 from "@/app/assets/carbon3.jpeg";
+import carbon5 from "@/app/assets/carbon5.jpeg";
 import {
   motion,
   AnimatePresence,
@@ -52,56 +55,53 @@ const colors = {
 const products = [
   {
     id: 1,
-    title: "Industrial Automation System",
-    subtitle: "Next-Gen Manufacturing",
+    title: "DC Motor Carbon Brush",
+    subtitle: "EG-224 High-Performance Carbon Brush",
     description:
-      "Revolutionize your production line with our state-of-the-art automation system. Increase efficiency by up to 35% while reducing operational costs.",
-    image:
-      "https://images.unsplash.com/photo-1528918029941-0e3a62e408e3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "The EG-224 Carbon Brush is designed for heavy-duty DC motors, providing exceptional conductivity and durability. Crafted from high-grade carbon, it ensures minimal wear and 99-hour continuous operation. Ideal for industrial applications, generators, and power tools.",
+    image: carbon1,
     features: [
-      "AI-powered controls",
-      "Modular design",
-      "Real-time analytics",
-      "Energy efficient",
+      "Durable material",
+      "High conductivity",
+      "Heavy-duty use",
+      "99-hour lifespan",
     ],
-    ctaText: "Explore System",
-    ctaSecondary: "Watch Demo",
+    ctaText: "View Details",
+    ctaSecondary: "View Specifications",
     color: colors.primary[600],
   },
   {
     id: 2,
-    title: "CNC Precision Machinery",
-    subtitle: "Ultimate Precision",
+    title: "Grinder Carbon Brush",
+    subtitle: "Industrial-Grade Replacement Brushes",
     description:
-      "Achieve micron-level precision with our advanced CNC machinery. Perfect for aerospace, medical, and high-tolerance manufacturing applications.",
-    image:
-      "https://images.unsplash.com/photo-1530939069691-adb779735408?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDUxfHx8ZW58MHx8fHx8",
+      "Our Grinder Carbon Brushes are built for high-speed angle grinders and power tools, ensuring consistent power transmission and long-lasting durability. Designed with self-lubricating carbon material, these brushes reduce wear and enhance tool performance.",
+    image: carbon5,
     features: [
-      "0.001mm precision",
-      "Multi-axis control",
-      "Rapid tooling",
-      "Automated calibration",
+      "Self-lubricating",
+      "High power transfer",
+      "Reduces sparking",
+      "Fits most grinders",
     ],
-    ctaText: "View Specifications",
-    ctaSecondary: "Request Quote",
+    ctaText: "View Details",
+    ctaSecondary: "Find Compatible Models",
     color: colors.primary[700],
   },
   {
     id: 3,
-    title: "Smart Factory Solutions",
-    subtitle: "Industry 4.0 Ready",
+    title: "Armature Carbon Brush",
+    subtitle: "Premium-Quality Conductive Brushes",
     description:
-      "Transform your facility into a smart factory with our integrated IoT platform. Monitor, control, and optimize your entire operation from anywhere.",
-    image:
-      "https://images.unsplash.com/photo-1564183063457-680b3759a5bd?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDYxfHx8ZW58MHx8fHx8",
+      "The Armature Carbon Brush is engineered for rotating electrical machines like generators, drills, and motors. It provides low-friction contact, minimizes energy loss, and ensures consistent electrical conduction for prolonged motor life.",
+    image: carbon3,
     features: [
-      "IoT integration",
-      "Cloud dashboard",
-      "Predictive maintenance",
-      "Remote management",
+      "Stable contact",
+      "Low resistance",
+      "Wear-resistant",
+      "High-speed use",
     ],
-    ctaText: "Discover Platform",
-    ctaSecondary: "Schedule Demo",
+    ctaText: "View Details",
+    ctaSecondary: "Check Compatibility",
     color: colors.primary[800],
   },
 ];
@@ -328,10 +328,20 @@ export default function HeroSection() {
                   className="relative z-10"
                 >
                   <img
-                    src={products[currentSlide].image || "/placeholder.svg"}
+                    src={
+                      typeof products[currentSlide].image === "string"
+                        ? products[currentSlide].image
+                        : products[currentSlide].image.src
+                    }
                     alt={products[currentSlide].title}
                     className="w-full h-auto object-cover rounded-2xl"
                   />
+
+                  {/* <img
+                    src={products[currentSlide].image || "/placeholder.svg"}
+                    alt={products[currentSlide].title}
+                    className="w-full h-auto object-cover rounded-2xl"
+                  /> */}
                 </motion.div>
 
                 {/* Decorative elements */}

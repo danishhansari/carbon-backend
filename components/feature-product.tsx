@@ -3,44 +3,45 @@
 import { useRef, useEffect } from "react";
 import { motion, useInView, useAnimation } from "framer-motion";
 import Link from "next/link";
+import carbon5 from "@/app/assets/carbon5.jpeg";
+import carbon6 from "@/app/assets/carbon6.jpeg";
+import carbon7 from "@/app/assets/carbon3.jpeg";
+import carbon8 from "@/app/assets/carbon8.jpg";
+import carbon9 from "@/app/assets/carbon9.jpeg";
 
 const products = [
   {
     id: 1,
-    name: "Industrial Drill Press",
-    category: "Machinery",
-    image:
-      "https://plus.unsplash.com/premium_photo-1663012869057-6833154b6fe4?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    name: "Copper Graphite ",
+    category: "Carbon Brush",
+    image: carbon5,
     description:
       "High-precision drill press for industrial applications with variable speed control.",
     price: "",
   },
   {
     id: 2,
-    name: "Automated Conveyor System",
-    category: "Automation",
-    image:
-      "https://plus.unsplash.com/premium_photo-1663045362736-9635edb042f4?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    name: "EG-224 Graphite",
+    category: "Carbon Brush",
+    image: carbon6,
     description:
       "Modular conveyor system with smart controls for efficient material handling.",
     price: "",
   },
   {
     id: 3,
-    name: "CNC Milling Machine",
-    category: "Machinery",
-    image:
-      "https://plus.unsplash.com/premium_photo-1682141597582-41bcb432820e?q=80&w=2121&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    name: "L53 Grade",
+    category: "Carbon Brush",
+    image: carbon7,
     description:
       "Computer numerical control milling machine for precision manufacturing.",
     price: "",
   },
   {
     id: 4,
-    name: "Robotic Arm Assembly",
-    category: "Automation",
-    image:
-      "https://plus.unsplash.com/premium_photo-1663013310298-80cfe3d51d78?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDU1fHx8ZW58MHx8fHx8",
+    name: "AG4 Carbon",
+    category: "Carbon Brush",
+    image: carbon8,
     description:
       "6-axis robotic arm for assembly line automation with advanced programming capabilities.",
     price: "",
@@ -114,7 +115,11 @@ export default function FeaturedProducts() {
             >
               <div className="relative h-48 overflow-hidden">
                 <img
-                  src={product.image || "/placeholder.svg"}
+                  src={
+                    typeof product.image === "string"
+                      ? product.image
+                      : product.image.src
+                  }
                   alt={product.name}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
