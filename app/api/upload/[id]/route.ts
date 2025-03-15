@@ -5,9 +5,13 @@ const redis = new Redis(process.env.REDIS_URL as string);
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } } // Extract the `id` from dynamic route params
+  {
+    params,
+  }: {
+    params: Promise<{ id: string }>;
+  }
 ) {
-  const uuid = params.id; // Get UUID directly from route
+  const uuid = (await params).id;
 
   if (!uuid) {
     return Response.json({ error: "UUID is required" }, { status: 400 });
@@ -29,4 +33,3 @@ export async function GET(
     );
   }
 }
-    
