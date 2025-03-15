@@ -214,7 +214,7 @@ export default function ProductDetail() {
         )}
 
         {/* Product specifications section */}
-        {product && (
+        {/* {product && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -273,7 +273,7 @@ export default function ProductDetail() {
               </div>
             </div>
           </motion.div>
-        )}
+        )} */}
       </div>
       <Footer />
     </>
