@@ -4,14 +4,14 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { S3Client } from "@aws-sdk/client-s3";
 import { config } from "dotenv";
-import { db } from "@/app/lib/db/db";
-import { products } from "@/app/lib/db/schema";
+import { Redis } from "ioredis";
 
 config();
 
 const ACCOUNT_ID = process.env.ACCOUNT_ID as string;
 const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID as string;
 const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY as string;
+const redis = new Redis(process.env.REDIS_URL as string);
 
 const S3 = new S3Client({
   region: "auto",
@@ -22,14 +22,27 @@ const S3 = new S3Client({
   },
 });
 
-// Get Pre-Signed URL for Upload
-export async function POST(request: NextRequest) {
-  const obj = await request.json();
-  const { filename, productName, description, range, index } = obj;
-  const fileExtension = filename.split(".").pop(); // Get file extension
-  const uniqueFilename = `${uuidv4()}.${fileExtension}`; // Replace with UUID and retain extension
+// Types for request payload and database response
+interface ProductData {
+  filename: string;
+  productName: string;
+  description: string;
+  range: string;
+  index: number;
+}
 
-  console.log(uniqueFilename);
+export async function POST(request: NextRequest) {
+  let obj: ProductData;
+
+  try {
+    obj = await request.json();
+  } catch (error) {
+    return Response.json({ error: "Invalid JSON payload" }, { status: 400 });
+  }
+
+  const { filename, productName, description, range, index } = obj;
+  const fileExtension = filename.split(".").pop();
+  const uniqueFilename = `${uuidv4()}.${fileExtension}`;
 
   try {
     const url = await getSignedUrl(
@@ -38,36 +51,61 @@ export async function POST(request: NextRequest) {
         Bucket: "carbon-backend",
         Key: uniqueFilename,
       }),
-      {
-        expiresIn: 600,
-      }
+      { expiresIn: 600 }
     );
-    console.log(uniqueFilename);
-    const publicPath = `https://pub-eb15d66d126740589c61b97ec9d026af.r2.dev/${uniqueFilename}`;
-    console.log(publicPath);
-    if (url != null) {
-      try {
-        const response = await db.insert(products).values({
-          productName,
-          description,
-          range,
-          index,
-          imgUrl: publicPath,
-        });
-        return Response.json({ publicPath, url, response });
-      } catch (error) {
-        return Response.json(error);
-      }
+
+    const publicPath = `https://pub-${ACCOUNT_ID}.r2.dev/${uniqueFilename}`;
+
+    if (!url) {
+      return Response.json(
+        {
+          error: "Error while generating upload URL",
+        },
+        { status: 500 }
+      );
     }
-    return Response.json({
-      error: "Error while uploading file please try again later",
-    });
+
+    // Insert Data into Redis
+    try {
+      const productData = {
+        productName,
+        description,
+        range,
+        index,
+        imgUrl: publicPath,
+      };
+
+      await redis.hset(`product:${uniqueFilename}`, productData); // Efficient Redis hash storage
+
+      return Response.json({ publicPath, url, productData }, { status: 201 });
+    } catch (redisError) {
+      console.error("Redis Error:", redisError);
+      return Response.json(
+        {
+          error: "Failed to insert data into Redis",
+        },
+        { status: 500 }
+      );
+    }
   } catch (error: any) {
-    return Response.json({ error: error.message });
+    console.error("Upload Error:", error.message);
+    return Response.json({ error: error.message }, { status: 500 });
   }
 }
 
 export async function GET(request: NextRequest) {
-  const response = await db.select().from(products);
-  return Response.json(response);
+  try {
+    const keys = await redis.keys("product:*"); // Fetch all product keys
+    const products = await Promise.all(
+      keys.map(async (key) => await redis.hgetall(key))
+    );
+
+    return Response.json(products, { status: 200 });
+  } catch (error) {
+    console.error("Redis Fetch Error:", error);
+    return Response.json(
+      { error: "Failed to fetch data from Redis" },
+      { status: 500 }
+    );
+  }
 }
