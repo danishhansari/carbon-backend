@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from "react";
 import { motion, useInView, useAnimation } from "framer-motion";
+import Link from "next/link";
 
 const products = [
   {
@@ -148,9 +149,11 @@ export default function FeaturedProducts() {
           viewport={{ once: true, amount: 0.2 }}
           className="text-center mt-12"
         >
-          <button className="p-2 lg:px-6 lg:py-3 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 transition-colors duration-300">
-            View All Products
-          </button>
+          <Link href={"/products"}>
+            <button className="p-2 lg:px-6 lg:py-3 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 transition-colors duration-300">
+              View All Products
+            </button>
+          </Link>
         </motion.div>
       </div>
     </section>

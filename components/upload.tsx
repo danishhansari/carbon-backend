@@ -133,7 +133,7 @@ export function Upload() {
           description,
           price: Number.parseFloat(price),
           category,
-          quantity: Number(productData.quantity),
+          range: Number(productData.quantity),
           tags: productData.tags,
           index: Math.floor(Math.random() * 100),
         }),

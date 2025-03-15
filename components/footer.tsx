@@ -1,31 +1,44 @@
- "use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useRef } from "react"
-import { motion, useInView } from "framer-motion"
-import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin, ArrowRight, ExternalLink } from "lucide-react"
+import { useState, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  ArrowRight,
+  ExternalLink,
+} from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import svg from "@/app/logo.svg";
 
 export default function Footer() {
-  const [emailValue, setEmailValue] = useState("")
-  const [subscribed, setSubscribed] = useState(false)
-  const footerRef = useRef(null)
-  const isInView = useInView(footerRef, { once: true, amount: 0.2 })
+  const [emailValue, setEmailValue] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+  const footerRef = useRef(null);
+  const isInView = useInView(footerRef, { once: true, amount: 0.2 });
 
   const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (emailValue.trim() !== "") {
       // Here you would typically send this to your API
-      console.log("Subscribing email:", emailValue)
-      setSubscribed(true)
-      setEmailValue("")
+      console.log("Subscribing email:", emailValue);
+      setSubscribed(true);
+      setEmailValue("");
 
       // Reset the subscribed state after 3 seconds
       setTimeout(() => {
-        setSubscribed(false)
-      }, 3000)
+        setSubscribed(false);
+      }, 3000);
     }
-  }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -36,7 +49,7 @@ export default function Footer() {
         delayChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -48,7 +61,7 @@ export default function Footer() {
         ease: "easeOut",
       },
     },
-  }
+  };
 
   const linkGroups = [
     {
@@ -81,28 +94,36 @@ export default function Footer() {
         { name: "FAQ", href: "#" },
       ],
     },
-  ]
+  ];
 
   const contactInfo = [
-    { icon: <Phone size={18} />, text: "+1 (555) 123-4567", href: "tel:+15551234567" },
-    { icon: <Mail size={18} />, text: "info@royalcarbonbrush.com", href: "mailto:info@royalcarbonbrush.com" },
+    {
+      icon: <Phone size={18} />,
+      text: "+1 (555) 123-4567",
+      href: "tel:+15551234567",
+    },
+    {
+      icon: <Mail size={18} />,
+      text: "info@royalcarbonbrush.com",
+      href: "mailto:info@royalcarbonbrush.com",
+    },
     {
       icon: <MapPin size={18} />,
       text: "123 Industrial Way, Manufacturing District, NY 10001",
       href: "https://maps.google.com",
     },
-  ]
+  ];
 
   const socialLinks = [
     { icon: <Facebook size={20} />, href: "#", label: "Facebook" },
     { icon: <Twitter size={20} />, href: "#", label: "Twitter" },
     { icon: <Instagram size={20} />, href: "#", label: "Instagram" },
     { icon: <Linkedin size={20} />, href: "#", label: "LinkedIn" },
-  ]
+  ];
 
   return (
     <footer ref={footerRef} className="bg-gray-900 text-white pt-16 pb-8">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 max-w-6xl">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -112,11 +133,12 @@ export default function Footer() {
           {/* Company Info */}
           <motion.div variants={itemVariants} className="lg:col-span-4">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-1">
-                <span className="text-red-500">Royal</span> Carbon Brush
-              </h2>
+              <Link href={"/"}>
+                <Image src={svg} alt="Logo" className="w-56" />
+              </Link>
               <p className="text-gray-400 text-sm">
-                Leading manufacturer of industrial equipment and automation solutions since 1985.
+                Leading manufacturer of industrial equipment and automation
+                solutions since 1985.
               </p>
             </div>
 
@@ -127,7 +149,11 @@ export default function Footer() {
                   href={item.href}
                   className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
                   target={item.href.startsWith("http") ? "_blank" : undefined}
-                  rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  rel={
+                    item.href.startsWith("http")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
                 >
                   <div className="text-red-500 group-hover:text-red-400 transition-colors duration-200">
                     {item.icon}
@@ -159,8 +185,14 @@ export default function Footer() {
 
           {/* Quick Links */}
           {linkGroups.map((group, groupIndex) => (
-            <motion.div key={groupIndex} variants={itemVariants} className="lg:col-span-2">
-              <h3 className="text-lg font-semibold mb-4 text-white">{group.title}</h3>
+            <motion.div
+              key={groupIndex}
+              variants={itemVariants}
+              className="lg:col-span-2"
+            >
+              <h3 className="text-lg font-semibold mb-4 text-white">
+                {group.title}
+              </h3>
               <ul className="space-y-2">
                 {group.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
@@ -182,9 +214,12 @@ export default function Footer() {
 
           {/* Newsletter */}
           <motion.div variants={itemVariants} className="lg:col-span-2">
-            <h3 className="text-lg font-semibold mb-4 text-white">Newsletter</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">
+              Newsletter
+            </h3>
             <p className="text-gray-400 text-sm mb-4">
-              Subscribe to our newsletter for the latest product updates and industry news.
+              Subscribe to our newsletter for the latest product updates and
+              industry news.
             </p>
 
             <form onSubmit={handleSubscribe} className="relative">
@@ -226,26 +261,38 @@ export default function Footer() {
           className="pt-8 mt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center"
         >
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
-            © {new Date().getFullYear()} Royal Carbon Brush. All rights reserved.
+            © {new Date().getFullYear()} Royal Carbon Brush. All rights
+            reserved.
           </p>
 
           <div className="flex flex-wrap gap-6 text-sm text-gray-500">
-            <a href="#" className="hover:text-white transition-colors duration-200">
+            <a
+              href="#"
+              className="hover:text-white transition-colors duration-200"
+            >
               Privacy Policy
             </a>
-            <a href="#" className="hover:text-white transition-colors duration-200">
+            <a
+              href="#"
+              className="hover:text-white transition-colors duration-200"
+            >
               Terms of Service
             </a>
-            <a href="#" className="hover:text-white transition-colors duration-200">
+            <a
+              href="#"
+              className="hover:text-white transition-colors duration-200"
+            >
               Cookie Policy
             </a>
-            <a href="#" className="hover:text-white transition-colors duration-200">
+            <a
+              href="#"
+              className="hover:text-white transition-colors duration-200"
+            >
               Sitemap
             </a>
           </div>
         </motion.div>
       </div>
     </footer>
-  )
+  );
 }
-

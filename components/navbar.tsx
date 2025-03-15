@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import { Search, Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import svg from "@/app/logo.svg";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -33,25 +36,21 @@ export default function Navbar() {
         className={`${
           scrolled
             ? "bg-white/95 backdrop-blur-md shadow-md py-2"
-            : "bg-white py-3"
+            : "bg-white py-2"
         } fixed top-0 left-0 lg:px-12 w-full z-50 transition-all duration-300`}
-        style={{ top: scrolled ? "0" : "32px" }}
+        style={{ top: scrolled ? "0" : "0px" }}
       >
         <div className="container mx-auto flex justify-between items-center px-4  ">
-          {/* Logo */}
           <div className="flex items-center ">
-          {/* <logo width={150} height={50} /> */}
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
               className="text-2xl font-bold"
             >
-              <span className="text-red-600">Royal</span>
-              <span className="text-gray-800 hidden sm:inline">
-                {" "}
-                Carbon Brush
-              </span>
+              <Link href={"/"}>
+                <Image src={svg} alt="Logo" className="w-56" />
+              </Link>
             </motion.div>
           </div>
 
@@ -82,13 +81,6 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-8">
             {/* Main Navigation */}
             <div className="flex items-center gap-6">
-              <a
-                href="#"
-                className="text-gray-700 font-medium hover:text-red-600 transition-colors duration-200"
-              >
-                Home
-              </a>
-
               {/* Products Dropdown */}
               <div className="group relative">
                 <button className="text-gray-700 font-medium flex items-center gap-1 hover:text-red-600 transition-colors duration-200 group">
@@ -119,24 +111,15 @@ export default function Navbar() {
                       href="#"
                       className="block px-4 py-2.5 hover:bg-red-50 hover:text-red-600 cursor-pointer transition-colors duration-150 text-gray-700"
                     >
-                     Ac Motors Carbon Brush
+                      Ac Motors Carbon Brush
                     </a>
                     <a
                       href="#"
                       className="block px-4 py-2.5 hover:bg-red-50 hover:text-red-600 cursor-pointer transition-colors duration-150 text-gray-700"
-                    >
-                      
-                    </a>
+                    ></a>
                   </div>
                 </div>
               </div>
-
-              <a
-                href="#"
-                className="text-gray-700 font-medium hover:text-red-600 transition-colors duration-200"
-              >
-                Solutions
-              </a>
 
               <a
                 href="#"
