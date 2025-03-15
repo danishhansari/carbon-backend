@@ -1,8 +1,9 @@
 "use client";
 
 import Navbar from "@/components/navbar";
-import { Loader, Loader2 } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface ProductType {
   id: number;
@@ -16,6 +17,7 @@ interface ProductType {
 const Products = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -33,6 +35,10 @@ const Products = () => {
     fetchProducts();
   }, []);
 
+  const handleProductClick = (productId: number) => {
+    router.push(`/products/${productId}`);
+  };
+
   return (
     <>
       <Navbar />
@@ -42,10 +48,11 @@ const Products = () => {
             <Loader className="animate-spin" />
           </div>
         ) : products.length > 0 ? (
-          products.map((product) => (
+          products.map((product, index) => (
             <div
-              key={product.id}
-              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
+              key={index}
+              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+              onClick={() => handleProductClick(product.id)}
             >
               <div className="relative h-48 overflow-hidden">
                 <img
@@ -70,7 +77,13 @@ const Products = () => {
                   <span className="text-red-600 font-bold">
                     {product.range}
                   </span>
-                  <button className="p-2 lg:px-4 lg:py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-red-600 hover:text-white transition-colors duration-300">
+                  <button
+                    className="p-2 lg:px-4 lg:py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-red-600 hover:text-white transition-colors duration-300"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent the parent div's onClick from firing
+                      handleProductClick(product.id);
+                    }}
+                  >
                     View Details
                   </button>
                 </div>

@@ -42,7 +42,8 @@ export async function POST(request: NextRequest) {
 
   const { filename, productName, description, range, index } = obj;
   const fileExtension = filename.split(".").pop();
-  const uniqueFilename = `${uuidv4()}.${fileExtension}`;
+  const uniqueId = uuidv4();
+  const uniqueFilename = `${uniqueId}.${fileExtension}`;
 
   try {
     const url = await getSignedUrl(
@@ -54,7 +55,8 @@ export async function POST(request: NextRequest) {
       { expiresIn: 600 }
     );
 
-    const publicPath = `https://pub-${ACCOUNT_ID}.r2.dev/${uniqueFilename}`;
+    // const publicPath = `https://pub-${ACCOUNT_ID}.r2.dev/${uniqueFilename}`;
+    const publicPath = `https://pub-eb15d66d126740589c61b97ec9d026af.r2.dev/${uniqueFilename}`;
 
     if (!url) {
       return Response.json(
@@ -68,6 +70,7 @@ export async function POST(request: NextRequest) {
     // Insert Data into Redis
     try {
       const productData = {
+        id: uniqueId, // Added unique ID here
         productName,
         description,
         range,
@@ -75,7 +78,7 @@ export async function POST(request: NextRequest) {
         imgUrl: publicPath,
       };
 
-      await redis.hset(`product:${uniqueFilename}`, productData); // Efficient Redis hash storage
+      await redis.hset(`product:${uniqueId}`, productData); // Efficient Redis hash storage
 
       return Response.json({ publicPath, url, productData }, { status: 201 });
     } catch (redisError) {
@@ -97,7 +100,10 @@ export async function GET(request: NextRequest) {
   try {
     const keys = await redis.keys("product:*"); // Fetch all product keys
     const products = await Promise.all(
-      keys.map(async (key) => await redis.hgetall(key))
+      keys.map(async (key) => {
+        const productData = await redis.hgetall(key);
+        return { id: key.split(":")[1], ...productData }; // Include `id` in the response
+      })
     );
 
     return Response.json(products, { status: 200 });
